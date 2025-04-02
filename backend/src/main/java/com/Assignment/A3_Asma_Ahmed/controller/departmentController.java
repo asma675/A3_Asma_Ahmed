@@ -33,7 +33,7 @@ public class departmentController {
 	}
 	
 	private long generateRandomEmpId() {
-	    return 10000000000L + new Random().nextInt(900000000); // Ensures 11-digit number
+	    return 10000000000L + new Random().nextInt(900000000); 
 	}
 	
 	@GetMapping("/getDepartments/")
@@ -47,7 +47,7 @@ public class departmentController {
         Department existingDepartment = dao.findById(data.getDept_id())
                 .orElseThrow(() -> new RuntimeException("Department not found"));
         
-        // Update fields
+        
         existingDepartment.setEmail(data.getEmail());
         existingDepartment.setDept_name(data.getDept_name());
         existingDepartment.setPhone(data.getPhone());
