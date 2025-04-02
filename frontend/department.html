@@ -9,6 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
     </head>
     <body>
         <div id="header"><nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -34,6 +35,12 @@
           </nav></div>
 
           <form class="container m-3">
+            <div class="form-group row m-2 d-none" id="idField">
+                <label for="inputID" class="col-sm-2 col-form-label">ID</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputID" placeholder="" disabled>
+                </div>
+              </div>
             <div class="form-group row m-2">
               <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
               <div class="col-sm-10">
@@ -74,16 +81,13 @@
             </tbody>
         </table>
 
-          <div class="container">
+        <div class="container">
             <footer class="py-3 my-4">
               <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Asma Ahmed</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Student ID</a></li>
               </ul>
-              <p class="text-center text-body-secondary">© 2024 Company, Inc</p>
+              <p class="text-center text-body-secondary">© 2025 Company, Inc</p>
             </footer>
           </div>
           </body>
@@ -123,18 +127,22 @@
             let emailInput = document.getElementById("inputEmail").value.trim();
             let department = document.getElementById("inputDeparmentnameName");
             let phoneInput = document.getElementById("inputDeparmentPhone");
+            let idDiv = document.getElementById("idField");
+            let idField = document.getElementById("inputID");
 
             let foundDepartment = departmentData.find(department => department.email.toLowerCase() === emailInput.toLowerCase());
 
             if (foundDepartment) {
+                idField.value = foundDepartment.dept_id;
                 emailInput.value = foundDepartment.email; 
                 phoneInput.value = foundDepartment.phone;
                 department.value = foundDepartment.dept_name;
-
+                idDiv.classList.remove("d-none");
                 actionButton.textContent = "Update"; // Change button text
                 actionButton.classList.remove("btn-primary");
                 actionButton.classList.add("btn-warning");
             } else {
+                idDiv.classList.add("d-none");
                 actionButton.textContent = "Add"; // Reset button text
                 actionButton.classList.remove("btn-warning");
                 actionButton.classList.add("btn-primary");
@@ -145,6 +153,72 @@
     document.getElementById("inputEmail").addEventListener("input", checkEmail);
 
     fetchData(); // Fetch data on page load
+
+    function isValidEmail(email) {
+    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation regex
+    return emailPattern.test(email);
+}
+    document.getElementById("actionButton").addEventListener("click", async function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    let email = document.getElementById("inputEmail").value.trim();
+    let phone = document.getElementById("inputDeparmentPhone").value.trim();
+    let DepName = document.getElementById("inputDeparmentnameName").value.trim();
+
+    if (!email  || !phone || !DepName ) {
+        alert("All fields are required");
+        return;
+    }
+
+    if (!isValidEmail(email)) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+
+    let actionButton = document.getElementById("actionButton");
+
+    let payload = {
+        email: email,
+        dept_name: DepName,
+        phone: phone,
+    };
+
+    try {
+        if (actionButton.textContent === "Add") {
+            // Add new employee (POST API)
+            let response = await fetch("http://localhost:8080/department/addDepartment/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                fetchData(); // Refresh table
+            } else {
+                alert("Failed to add employee.");
+            }
+
+        } else if (actionButton.textContent === "Update") {
+          payload.dept_id = document.getElementById("inputID").value.trim();
+            let response = await fetch(`http://localhost:8080/department/updateDepartment`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                fetchData(); // Refresh table
+            } else {
+                alert("Failed to update employee.");
+            }
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+    }
+});
+
+
 </script>
 
 </body>
