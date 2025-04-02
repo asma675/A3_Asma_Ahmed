@@ -40,7 +40,7 @@ import com.Assignment.A3_Asma_Ahmed.model.EmployeeDeptDTO;
 			return "Employee Saved";
 		}
 		private long generateRandomEmpId() {
-		    return 10000000000L + new Random().nextInt(900000000); // Ensures 11-digit number
+		    return 10000000000L + new Random().nextInt(900000000); 
 		}
 		
 		@GetMapping("/getEmployees/")
@@ -59,21 +59,16 @@ import com.Assignment.A3_Asma_Ahmed.model.EmployeeDeptDTO;
 		    Department department = depDao.findById(departmentId)
 		            .orElseThrow(() -> new RuntimeException("Department not found"));
 
-		    // Assign department to employee
 		    employee.getDepartments().add(department);
 
-		    // Assign employee to department
 		    department.getEmployees().add(employee);
 
-		    // Save both entities
 		    empDao.save(employee);
 		    depDao.save(department);
 
 		    return "Employee assigned to Department successfully";
 		}
-
-
-		
+	
 	    @GetMapping("/employeesWithDepartments/")
 	    public List<EmployeeDeptDTO> getAllEmployeesWithDepartments() {
 	        return empDao.findAllEmployeesWithDepartments();
@@ -85,13 +80,12 @@ import com.Assignment.A3_Asma_Ahmed.model.EmployeeDeptDTO;
 	        Employee existingEmployee = empDao.findById(data.getEmp_id())
 	                .orElseThrow(() -> new RuntimeException("Employee not found"));
 	        
-	        // Update fields
 	        existingEmployee.setEmail(data.getEmail());
 	        existingEmployee.setFirst_name(data.getFirst_name());
 	        existingEmployee.setLast_name(data.getLast_name());
 	        existingEmployee.setGender(data.getGender());
 	        existingEmployee.setHire_date(data.getHire_date());
-	        existingEmployee.setDepartments(data.getDepartments());  // Reassign departments if needed
+	        existingEmployee.setDepartments(data.getDepartments());  
 
 	        empDao.save(existingEmployee);
 	        return "Employee updated successfully";
