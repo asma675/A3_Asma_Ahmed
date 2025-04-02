@@ -2,6 +2,7 @@
 	
 	import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 	import org.springframework.web.bind.annotation.RequestMapping;
 	import org.springframework.web.bind.annotation.RestController;
 
-import com.Assignment.A3_Asma_Ahmed.Dao.departmentDao;
-import com.Assignment.A3_Asma_Ahmed.Dao.employeeDao;
+import com.Assignment.A3_Asma_Ahmed.dao.departmentDao;
+import com.Assignment.A3_Asma_Ahmed.dao.employeeDao;
 import com.Assignment.A3_Asma_Ahmed.model.Department;
 import com.Assignment.A3_Asma_Ahmed.model.Employee;
 import com.Assignment.A3_Asma_Ahmed.model.EmployeeDeptDTO;
@@ -29,35 +30,48 @@ import com.Assignment.A3_Asma_Ahmed.model.EmployeeDeptDTO;
 		@Autowired
 		private departmentDao depDao;
 		
+		@Transactional
 		@PostMapping("/addEmployee")
 		public String saveEmployee(@RequestBody Employee data) {
+		    if (data.getEmp_id() == null || data.getEmp_id() == 0) {
+		        data.setEmp_id(generateRandomEmpId());
+		    }
 			empDao.save(data);
 			return "Employee Saved";
+		}
+		private long generateRandomEmpId() {
+		    return 10000000000L + new Random().nextInt(900000000); // Ensures 11-digit number
 		}
 		
 		@GetMapping("/getEmployees/")
 		@Transactional
-		public List<Employee> getEmployee(){
-			return (List<Employee>) empDao.findAll();
+		public List<com.Assignment.A3_Asma_Ahmed.model.Employee> getEmployee(){
+			return (List<com.Assignment.A3_Asma_Ahmed.model.Employee>) empDao.findAll();
 		}
 		
 		@PostMapping("/{employeeId}/assign/{departmentId}")
 		public String assignEmployeeToDepartment(
-		        @PathVariable int employeeId,
-		        @PathVariable int departmentId) {
+		        @PathVariable Long employeeId,
+		        @PathVariable Long departmentId) {
 
 		    Employee employee = empDao.findById(employeeId)
 		            .orElseThrow(() -> new RuntimeException("Employee not found"));
 		    Department department = depDao.findById(departmentId)
 		            .orElseThrow(() -> new RuntimeException("Department not found"));
 
-		    Set<Department> departments = new HashSet<>(employee.getDepartments());
-		    departments.add(department);
-		    employee.setDepartments(departments);
+		    // Assign department to employee
+		    employee.getDepartments().add(department);
 
+		    // Assign employee to department
+		    department.getEmployees().add(employee);
+
+		    // Save both entities
 		    empDao.save(employee);
+		    depDao.save(department);
+
 		    return "Employee assigned to Department successfully";
 		}
+
 
 		
 	    @GetMapping("/employeesWithDepartments/")

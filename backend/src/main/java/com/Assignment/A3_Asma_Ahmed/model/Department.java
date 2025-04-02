@@ -25,8 +25,7 @@ import lombok.NoArgsConstructor;
 public class Department {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int dept_id;
+    private Long dept_id;
     @JsonProperty("email")
     private String email;
     @JsonProperty("dept_name")

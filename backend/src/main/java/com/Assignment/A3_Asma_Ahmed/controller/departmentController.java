@@ -1,6 +1,7 @@
 package com.Assignment.A3_Asma_Ahmed.controller;
 
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.Assignment.A3_Asma_Ahmed.Dao.departmentDao;
-import com.Assignment.A3_Asma_Ahmed.Dao.employeeDao;
+import com.Assignment.A3_Asma_Ahmed.dao.departmentDao;
+import com.Assignment.A3_Asma_Ahmed.dao.employeeDao;
 import com.Assignment.A3_Asma_Ahmed.model.Department;
 import com.Assignment.A3_Asma_Ahmed.model.Employee;
 
@@ -21,15 +22,23 @@ public class departmentController {
 	@Autowired
 	private departmentDao dao;
 	
+	@Transactional
 	@PostMapping("/addDepartment/")
 	public String saveEmployee(@RequestBody Department data) {
+	    if (data.getDept_id() == null || data.getDept_id() == 0) {
+	        data.setDept_id(generateRandomEmpId());
+	    }
 		dao.save(data);
 		return "Department Saved";
 	}
 	
+	private long generateRandomEmpId() {
+	    return 10000000000L + new Random().nextInt(900000000); // Ensures 11-digit number
+	}
+	
 	@GetMapping("/getDepartments/")
-	public List<Department> getEmployee(){
-		return (List<Department>) dao.findAll();
+	public List<com.Assignment.A3_Asma_Ahmed.model.Department> getEmployee(){
+		return (List<com.Assignment.A3_Asma_Ahmed.model.Department>) dao.findAll();
 	}
 	
     @Transactional

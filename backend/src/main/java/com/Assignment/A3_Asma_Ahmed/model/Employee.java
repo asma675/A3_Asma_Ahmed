@@ -30,8 +30,7 @@ import jakarta.persistence.JoinColumn;
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int emp_id;
+    private Long emp_id;
     @JsonProperty("email")
     private String email;
     @JsonProperty("first_name")

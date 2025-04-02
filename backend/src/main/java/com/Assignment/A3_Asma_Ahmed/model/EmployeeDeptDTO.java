@@ -4,16 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class EmployeeDeptDTO {
-
-    private int emp_id;
-    private String email;
-    private String first_name;
-    private String last_name;
-    private String gender;
-    private String hire_date;
-    private String dept_name;
+public interface EmployeeDeptDTO {
+    Long getEmp_id();
+    String getEmail();
+    String getFirst_name();
+    String getLast_name();
+    String getGender();
+    String getHire_date();
+    String getDept_name();
 }
