@@ -41,43 +41,17 @@
               </div>
             </div>
             <div class="form-group row m-2">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">First Name</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Department Name</label>
                 <div class="col-sm-10">
-                  <input class="form-control" id="inputfirstName" placeholder="First Name">
+                  <input class="form-control" id="inputDeparmentnameName" placeholder="Department Name">
                 </div>
               </div>
               <div class="form-group row m-2">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Last Name</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Department phone</label>
                 <div class="col-sm-10">
-                  <input class="form-control" id="inputLastName" placeholder="First Name">
+                  <input class="form-control" id="inputDeparmentPhone" placeholder="Department phone">
                 </div>
               </div>
-            <fieldset class="form-group row m-2">
-              <div class="row">
-                <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
-                <div class="col-sm-10">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gridRadios" id="MaleRadio" value="Male" checked>
-                    <label class="form-check-label" for="gridRadios1">
-                      Male
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gridRadios" id="FemaleRadio" value="Female">
-                    <label class="form-check-label" for="gridRadios2">
-                      Female
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </fieldset>
-            <div class="form-group row m-2">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Hire Date</label>
-
-                <div class="col-sm-10">
-                <input type="date" id="hire_dateInput" name="hire_dateInput">
-                </div>
-            </div>
             <div class="form-group row">
               <div class="col-sm-10">
                 <button type="submit" class="btn btn-primary" id="actionButton">Add</button>
@@ -89,10 +63,10 @@
             <thead class="table-dark">
                 <tr>
                     <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>Department Name</th>
                     <th>Email</th>
-                    <th>Gender</th>
+                    <th>Phone</th>
+
                 </tr>
             </thead>
             <tbody id="table-body">
@@ -123,19 +97,18 @@
     async function fetchData() {
         console.log("Fetching data...");
         try {
-            let response = await fetch("http://localhost:8080/employee/getEmployees/"); // Sample API
-            userData = await response.json();
+            let response = await fetch("http://localhost:8080/department/getDepartments/"); // Sample API
+            departmentData = await response.json();
 
             let tableBody = document.getElementById("table-body");
             tableBody.innerHTML = ""; // Clear previous data
 
-            userData.forEach(user => {
+            departmentData.forEach(department => {
                 let row = `<tr>
-                    <td>${user.emp_id}</td>
-                    <td>${user.first_name}</td>
-                    <td>${user.last_name}</td>
-                    <td>${user.email}</td>
-                    <td>${user.gender}</td>
+                    <td>${department.dept_id}</td>
+                    <td>${department.dept_name}</td>
+                    <td>${department.email}</td>
+                    <td>${department.phone}</td>
                 </tr>`;
                 tableBody.innerHTML += row;
             });
@@ -148,27 +121,15 @@
     // Function to check if email exists
     function checkEmail() {
             let emailInput = document.getElementById("inputEmail").value.trim();
-            let first_nameInput = document.getElementById("inputfirstName");
-            let last_nameInput = document.getElementById("inputLastName");
-            // let genderInput = document.getElementById("usernameInput");
-            let hire_dateInput = document.getElementById("hire_dateInput");
+            let department = document.getElementById("inputDeparmentnameName");
+            let phoneInput = document.getElementById("inputDeparmentPhone");
 
+            let foundDepartment = departmentData.find(department => department.email.toLowerCase() === emailInput.toLowerCase());
 
-
-            let actionButton = document.getElementById("actionButton");
-
-            let foundUser = userData.find(user => user.email.toLowerCase() === emailInput.toLowerCase());
-
-            if (foundUser) {
-                emailInput.value = foundUser.email; 
-                first_nameInput.value = foundUser.first_name;
-                last_nameInput.value = foundUser.last_name;
-                hire_dateInput.value = foundUser.hire_date;
-                            if (foundUser.gender === 'M') {
-            document.getElementById('MaleRadio').checked = true;
-            } else {
-            document.getElementById('FemaleRadio').checked = true;
-            }
+            if (foundDepartment) {
+                emailInput.value = foundDepartment.email; 
+                phoneInput.value = foundDepartment.phone;
+                department.value = foundDepartment.dept_name;
 
                 actionButton.textContent = "Update"; // Change button text
                 actionButton.classList.remove("btn-primary");
