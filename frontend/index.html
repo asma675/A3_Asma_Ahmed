@@ -20,13 +20,13 @@
               <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="./index.html">Employee</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#">Register Department</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Department</a>
+                    <a class="nav-link" href="./department.html">Department</a>
                   </li>
                 </ul>
               </div>
@@ -34,22 +34,28 @@
           </nav></div>
 
           <form class="container m-3">
-            <div class="form-group row m-2">
-              <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+            <div class="form-group row m-2 d-none" id="idField">
+              <label for="inputID" class="col-sm-2 col-form-label">ID</label>
               <div class="col-sm-10">
-                <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                <input type="text" class="form-control" id="inputID" placeholder="" disabled>
               </div>
             </div>
             <div class="form-group row m-2">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">First Name</label>
+              <label for="inputEmail3" class="col-sm-2 col-form-label" required>Email</label>
+              <div class="col-sm-10">
+                <input type="email" class="form-control" id="inputEmail" placeholder="Email" required>
+              </div>
+            </div>
+            <div class="form-group row m-2">
+                <label for="inputEmail3" class="col-sm-2 col-form-label" required>First Name</label>
                 <div class="col-sm-10">
-                  <input class="form-control" id="inputfirstName" placeholder="First Name">
+                  <input class="form-control" id="inputfirstName" placeholder="First Name" required>
                 </div>
               </div>
               <div class="form-group row m-2">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Last Name</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label" >Last Name</label>
                 <div class="col-sm-10">
-                  <input class="form-control" id="inputLastName" placeholder="First Name">
+                  <input class="form-control" id="inputLastName" placeholder="First Name" required>
                 </div>
               </div>
             <fieldset class="form-group row m-2">
@@ -75,7 +81,7 @@
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Hire Date</label>
 
                 <div class="col-sm-10">
-                <input type="date" id="hire_dateInput" name="hire_dateInput">
+                <input type="date" id="hire_dateInput" name="hire_dateInput" required>
                 </div>
             </div>
             <div class="form-group row">
@@ -103,13 +109,13 @@
           <div class="container">
             <footer class="py-3 my-4">
               <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Asma Ahmed</a></li>
                 <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
                 <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
                 <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
                 <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
               </ul>
-              <p class="text-center text-body-secondary">© 2024 Company, Inc</p>
+              <p class="text-center text-body-secondary">© 2025 Company, Inc</p>
             </footer>
           </div>
           </body>
@@ -152,6 +158,8 @@
             let last_nameInput = document.getElementById("inputLastName");
             // let genderInput = document.getElementById("usernameInput");
             let hire_dateInput = document.getElementById("hire_dateInput");
+            let idDiv = document.getElementById("idField");
+            let idField = document.getElementById("inputID");
 
 
 
@@ -161,6 +169,7 @@
 
             if (foundUser) {
                 emailInput.value = foundUser.email; 
+                idField.value = foundUser.emp_id;
                 first_nameInput.value = foundUser.first_name;
                 last_nameInput.value = foundUser.last_name;
                 hire_dateInput.value = foundUser.hire_date;
@@ -169,11 +178,12 @@
             } else {
             document.getElementById('FemaleRadio').checked = true;
             }
-
+            idDiv.classList.remove("d-none");
                 actionButton.textContent = "Update"; // Change button text
                 actionButton.classList.remove("btn-primary");
                 actionButton.classList.add("btn-warning");
             } else {
+              idDiv.classList.add("d-none");
                 actionButton.textContent = "Add"; // Reset button text
                 actionButton.classList.remove("btn-warning");
                 actionButton.classList.add("btn-primary");
@@ -184,6 +194,75 @@
     document.getElementById("inputEmail").addEventListener("input", checkEmail);
 
     fetchData(); // Fetch data on page load
+
+    function isValidEmail(email) {
+    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation regex
+    return emailPattern.test(email);
+}
+    document.getElementById("actionButton").addEventListener("click", async function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    let email = document.getElementById("inputEmail").value.trim();
+    let firstName = document.getElementById("inputfirstName").value.trim();
+    let lastName = document.getElementById("inputLastName").value.trim();
+    let hireDate = document.getElementById("hire_dateInput").value.trim();
+    let gender = document.querySelector('input[name="gridRadios"]:checked').value;
+    if (!email  || !firstName || !lastName || !hireDate || !gender) {
+        alert("All fields are required. and email should be valid");
+        return;
+    }
+
+    if (!isValidEmail(email)) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+
+    let actionButton = document.getElementById("actionButton");
+
+    let payload = {
+        email: email,
+        first_name: firstName,
+        last_name: lastName,
+        hire_date: hireDate,
+        gender: gender=='Male'?'M':'F'
+    };
+
+    try {
+        if (actionButton.textContent === "Add") {
+            // Add new employee (POST API)
+            let response = await fetch("http://localhost:8080/employee/addEmployee", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                fetchData(); // Refresh table
+            } else {
+                alert("Failed to add employee.");
+            }
+
+        } else if (actionButton.textContent === "Update") {
+          payload.emp_id = document.getElementById("inputID").value.trim();
+            let response = await fetch(`http://localhost:8080/employee/updateEmployee`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                fetchData(); // Refresh table
+            } else {
+                alert("Failed to update employee.");
+            }
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+    }
+});
+
+
 </script>
 
 </body>
