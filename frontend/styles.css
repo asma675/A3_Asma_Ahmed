@@ -1,4 +1,3 @@
-/* styles.css */
 html, body {
     height: 100%;
     margin: 0;
@@ -12,5 +11,5 @@ footer {
 }
 
 .table-container {
-    flex-grow: 1; /* Push footer to the bottom */
+    flex-grow: 1; 
 }
