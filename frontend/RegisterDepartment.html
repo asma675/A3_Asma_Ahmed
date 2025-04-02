@@ -48,17 +48,32 @@
               </div>
             </div>
             <div class="form-group row m-2">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Department Name</label>
-                <div class="col-sm-10">
-                  <input class="form-control" id="inputDeparmentnameName" placeholder="Department Name">
-                </div>
+              <label for="departmentType" class="col-sm-2 col-form-label">Department Type</label>
+              <div class="col-sm-10">
+                  <select class="form-control" id="departmentType">
+                    <option value="">Loading...</option>
+                  </select>
               </div>
-              <div class="form-group row m-2">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Department phone</label>
-                <div class="col-sm-10">
-                  <input class="form-control" id="inputDeparmentPhone" placeholder="Department phone">
-                </div>
-              </div>
+          </div>
+          <div class="form-group row m-2">
+            <label for="inputEmail3" class="col-sm-2 col-form-label" required>First Name</label>
+            <div class="col-sm-10">
+              <input class="form-control" id="inputfirstName" placeholder="First Name" required disabled>
+            </div>
+          </div>
+          <div class="form-group row m-2">
+            <label for="inputEmail3" class="col-sm-2 col-form-label" >Last Name</label>
+            <div class="col-sm-10">
+              <input class="form-control" id="inputLastName" placeholder="First Name" required disabled>
+            </div>
+          </div>
+        <div class="form-group row m-2">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Hire Date</label>
+
+            <div class="col-sm-10">
+            <input type="date" id="hire_dateInput" name="hire_dateInput" disabled>
+            </div>
+        </div>
             <div class="form-group row">
               <div class="col-sm-10">
                 <button type="submit" class="btn btn-primary" id="actionButton">Add</button>
@@ -70,9 +85,12 @@
             <thead class="table-dark">
                 <tr>
                     <th>ID</th>
-                    <th>Department Name</th>
                     <th>Email</th>
-                    <th>Phone</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Department Name</th>
+                    
+                    
 
                 </tr>
             </thead>
@@ -101,18 +119,19 @@
     async function fetchData() {
         console.log("Fetching data...");
         try {
-            let response = await fetch("http://localhost:8080/department/getDepartments/"); // Sample API
-            departmentData = await response.json();
+            let response = await fetch("http://localhost:8080/employee/employeesWithDepartments/"); // Sample API
+            empdepartmentData = await response.json();
 
             let tableBody = document.getElementById("table-body");
             tableBody.innerHTML = ""; // Clear previous data
 
-            departmentData.forEach(department => {
+            empdepartmentData.forEach(data => {
                 let row = `<tr>
-                    <td>${department.dept_id}</td>
-                    <td>${department.dept_name}</td>
-                    <td>${department.email}</td>
-                    <td>${department.phone}</td>
+                    <td>${data.emp_id}</td>
+                    <td>${data.email}</td>
+                    <td>${data.first_name}</td>
+                    <td>${data.last_name}</td>
+                    <td>${data.dept_name}</td>
                 </tr>`;
                 tableBody.innerHTML += row;
             });
@@ -126,7 +145,10 @@
     function checkEmail() {
             let emailInput = document.getElementById("inputEmail").value.trim();
             let department = document.getElementById("inputDeparmentnameName");
-            let phoneInput = document.getElementById("inputDeparmentPhone");
+            let first_nameInput = document.getElementById("inputfirstName");
+            let last_nameInput = document.getElementById("inputLastName");
+            // let genderInput = document.getElementById("usernameInput");
+            let hire_dateInput = document.getElementById("hire_dateInput");
             let idDiv = document.getElementById("idField");
             let idField = document.getElementById("inputID");
 
@@ -216,6 +238,23 @@
         console.error("Error:", error);
         alert("An error occurred. Please try again.");
     }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetch('http://localhost:8080/department/getDepartments/')
+        .then(response => response.json())
+        .then(data => {
+            let dropdown = document.getElementById('departmentType');
+            dropdown.innerHTML = '<option value="">Select Department Type</option>'; // Reset default
+
+            data.forEach(dept => {
+                let option = document.createElement('option');
+                option.value = dept.dept_id;
+                option.textContent = dept.dept_name;
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching department types:', error));
 });
 
 
