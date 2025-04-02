@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.Assignment.A3_Asma_Ahmed.dao.departmentDao;
-import com.Assignment.A3_Asma_Ahmed.dao.employeeDao;
+import com.Assignment.A3_Asma_Ahmed.Dao.departmentDao;
+import com.Assignment.A3_Asma_Ahmed.Dao.employeeDao;
 import com.Assignment.A3_Asma_Ahmed.model.Department;
 import com.Assignment.A3_Asma_Ahmed.model.Employee;
 
