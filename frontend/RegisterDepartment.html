@@ -95,7 +95,6 @@
                 </tr>
             </thead>
             <tbody id="table-body">
-                <!-- Data will be inserted here dynamically -->
             </tbody>
         </table>
 
@@ -119,11 +118,11 @@
     async function fetchData() {
         console.log("Fetching data...");
         try {
-            let response = await fetch("http://localhost:8080/employee/employeesWithDepartments/"); // Sample API
+            let response = await fetch("http://localhost:8080/employee/employeesWithDepartments/"); 
             empdepartmentData = await response.json();
 
             let tableBody = document.getElementById("table-body");
-            tableBody.innerHTML = ""; // Clear previous data
+            tableBody.innerHTML = ""; 
 
             empdepartmentData.forEach(data => {
                 let row = `<tr>
@@ -141,13 +140,11 @@
         }
     }
 
-    // Function to check if email exists
     function checkEmail() {
             let emailInput = document.getElementById("inputEmail").value.trim();
             let department = document.getElementById("inputDeparmentnameName");
             let first_nameInput = document.getElementById("inputfirstName");
             let last_nameInput = document.getElementById("inputLastName");
-            // let genderInput = document.getElementById("usernameInput");
             let hire_dateInput = document.getElementById("hire_dateInput");
             let idDiv = document.getElementById("idField");
             let idField = document.getElementById("inputID");
@@ -160,28 +157,27 @@
                 phoneInput.value = foundDepartment.phone;
                 department.value = foundDepartment.dept_name;
                 idDiv.classList.remove("d-none");
-                actionButton.textContent = "Update"; // Change button text
+                actionButton.textContent = "Update"; 
                 actionButton.classList.remove("btn-primary");
                 actionButton.classList.add("btn-warning");
             } else {
                 idDiv.classList.add("d-none");
-                actionButton.textContent = "Add"; // Reset button text
+                actionButton.textContent = "Add"; 
                 actionButton.classList.remove("btn-warning");
                 actionButton.classList.add("btn-primary");
             }
         }
 
-    // Event Listener for Input Field
     document.getElementById("inputEmail").addEventListener("input", checkEmail);
 
-    fetchData(); // Fetch data on page load
+    fetchData(); 
 
     function isValidEmail(email) {
-    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation regex
+    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(email);
 }
     document.getElementById("actionButton").addEventListener("click", async function(event) {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault(); 
 
     let email = document.getElementById("inputEmail").value.trim();
     let phone = document.getElementById("inputDeparmentPhone").value.trim();
@@ -207,7 +203,6 @@
 
     try {
         if (actionButton.textContent === "Add") {
-            // Add new employee (POST API)
             let response = await fetch("http://localhost:8080/department/addDepartment/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -215,7 +210,7 @@
             });
 
             if (response.ok) {
-                fetchData(); // Refresh table
+                fetchData(); 
             } else {
                 alert("Failed to add employee.");
             }
@@ -229,7 +224,7 @@
             });
 
             if (response.ok) {
-                fetchData(); // Refresh table
+                fetchData(); 
             } else {
                 alert("Failed to update employee.");
             }
@@ -245,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             let dropdown = document.getElementById('departmentType');
-            dropdown.innerHTML = '<option value="">Select Department Type</option>'; // Reset default
+            dropdown.innerHTML = '<option value="">Select Department Type</option>'; 
 
             data.forEach(dept => {
                 let option = document.createElement('option');
